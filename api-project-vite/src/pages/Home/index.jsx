@@ -1,16 +1,48 @@
 import { useEffect, useState, useRef } from "react";
-import Trash from "../../assets/lixeira.svg";
+import Card from "../Card";
 import api from "../../services/api";
+import Form from "../Form";
+
 export default function Home() {
   const [users, setUsers] = useState([])
+  const [userEdit, setUserEdit] = useState(null)
   const inputName = useRef()
   const inputEmail = useRef()
   const inputAge = useRef()
+
+  const handleSubmit = (e) => { 
+    e.preventDefault() 
+    if (
+      !inputName.current.value || 
+      !inputEmail.current.value ||
+      !inputAge.current.value) { 
+        alert("Preencha todos os campos")
+        return
+      }
+
+      if (userEdit) { 
+        updateUser(userEdit.id)
+      }
+      else { 
+        createUsers()
+      }
+      
+    
+    clearInputs()
+  }
+
+  function clearInputs() {
+    inputName.current.value = "";
+    inputEmail.current.value = "";
+    inputAge.current.value = "";
+  }
+
 
   async function getUsers() {
     const usersFromApi = await api.get("/usuarios");
     setUsers(usersFromApi.data)
   }
+
 
   async function createUsers() {
 
@@ -22,11 +54,30 @@ export default function Home() {
     getUsers()
   }
 
+  async function updateUser(id) { 
+    await api.put(`/usuarios/${id}`, { 
+      name: inputName.current.value,
+      email: inputEmail.current.value,
+      age: inputAge.current.value
+    })
+    setUserEdit(null)
+    getUsers()
+    clearInputs()
+  }
+
+  function handleEdit(user) { 
+    setUserEdit(user)
+    inputName.current.value = user.name
+    inputEmail.current.value = user.email
+    inputAge.current.value = user.age
+  }
   async function deleteUser(id){ 
 
     await api.delete(`/usuarios/${id}`)
     getUsers()
   }
+
+
 
   useEffect(() => {
     getUsers()
@@ -38,98 +89,21 @@ export default function Home() {
           <h2 className="text-2xl font-semibold text-center text-gray-700 mb-6">
             Cadastro de Usuários
           </h2>
+          {/* FORM */}
+          <Form 
+          inputName={inputName} 
+          inputEmail={inputEmail} 
+          inputAge={inputAge} 
+          handleSubmit={handleSubmit}
+          userEdit={userEdit}
+          
+          />
 
-          <form>
-            <div className="mb-4">
-              <label
-                htmlFor="nome"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Nome
-              </label>
-              <input
-                ref={inputName}
-                type="text"
-                id="nome"
-                name="nome"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Digite seu nome"
-                required
-              />
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <input
-                ref={inputEmail}
-                type="email"
-                id="email"
-                name="email"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Digite seu email"
-                required
-              />
-            </div>
-
-            <div className="mb-6">
-              <label
-                htmlFor="idade"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Idade
-              </label>
-              <input
-                ref={inputAge}
-                type="text"
-                id="idade"
-                name="idade"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Digite sua idade"
-                required
-              />
-            </div>
-
-            <button
-              data-testid="button"
-              onClick={createUsers}
-              type="submit"
-              className="w-full bg-blue-900 text-white py-2 rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Cadastrar
-            </button>
-          </form>
         </div>
       </div>
-      {users.map((user) => (
-        <div className="max-w-md mx-auto mt-10 mb-6" key={user.id}>
-          <div className="w-full p-6 bg-white shadow-md rounded-lg mx-auto">
-            <div className="p-4 flex justify-between items-center">
-              <div className="w-full">
-                <p className="text-lg font-semibold text-gray-80 0 text-left">
-                  NOME: {user.name}
-                </p>
-                <p className="text-lg font-semibold text-gray-600 text-left">
-                  EMAIL: {user.email}
-                </p>
-                <p className="text-lg font-semibold text-gray-600 text-left">
-                  IDADE: {user.age}
-                </p>
-              </div>
 
-              <button 
-              onClick={() => deleteUser(user.id)}
-              className="text-gray-500 hover:text-red-500 hover:bg-gray-100 p-2 rounded-md transition-colors">
-                <img src={Trash} alt="Lixeira" className="w-8 h-8" />
-              </button>
-            </div>
-          </div>
-        </div>
-      ))}
+      {/* CARD */}
+      <Card  users={users} deleteUser={deleteUser} handleEdit={handleEdit}/>
     </div>
   );
 }
