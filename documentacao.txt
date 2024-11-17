@@ -1,0 +1,59 @@
+node --watch .\server.js  --- comando para inicializar o server 
+npx prisma studio --- comando para acessar a base de dados 
+npm i cors
+
+
+comando para inicializar React com Vite 
+npm create vite@latest
+cd 'nome-da-pasta-criada' 
+npm install 
+npm run dev
+
+npm i -D tailwindcss
+npx tailwindcss init -p
+npm i -D postcss autoprefixer
+
+
+instalar axios para acessar os dados do backend 
+
+
+###### testes 
+npm install --save-dev react-test-renderer
+npm install --save-dev jest babel-jest @babel/preset-env @babel/preset-react react-test-renderer
+npm install --save-dev @testing-library/react @testing-library/dom
+npm i @testing-library/jest-dom @testing-library/react @testing-library/user-event -D
+npm i @babel/core @babel/preset-env @babel/preset-react babel-jest identity-obj-proxy jest-environment-jsdom -D         
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                ##### DOCUMENTAÇÃO TESTES #####  
+
+O objetivo dos testes foi verificar a renderização da função App, que é 
+responsável pela apresentação principal da aplicação. Verificando se 
+o componente principal é renderizado na tela do cliente. Também foi
+realizado teste do elemento <button> onde foi passado uma chave de 
+acesso a esse elemento também para verificar se o usuário tem acesso a 
+esse elemento. No teste do componente principal <App /> foi informado 
+para o teste uma frase que está dentro do componente, caso queira verificar
+o teste altere em "pages/Home/index.jsx" o texto "Cadastro de Usuários"
+
+
+comandos para rodar os testes: 
+    -- acesse a pasta do projeto react e digite: npm test 
+    esse comando é responsável por realizar todos os testes da aplicação
+
+
+
+ALUNOS: [
+    WASHINGTON CHAGAS SANTOS - RA: 2223200610, 
+    WILLIAM MATHEUS CHAGAS SANTOS - RA: 2223204295
+]
+
+
+
